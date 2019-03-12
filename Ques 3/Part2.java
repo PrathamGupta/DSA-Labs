@@ -1,83 +1,97 @@
-package Lab;
-import java.util.*;
+import java.util.Scanner;
 
-class Node{
+class Node
+{
 	int data;
-	Node left;
-	Node right;
-	public Node(int a) {
-		data=a;
-		left=null;
-		right=null;
-	}
-}
+	Node left , right;
 
-class Tree{
-	Node parent;
-	
-	public Tree() {
-		parent=null;
-	}
-	
-	public void setParent(int a) {
-		Node root=new Node(a);
-		if(parent==null)
-		{
-			parent=root;
-		}
-	}
-	
-	public Node searchParent(Node root, int target) {
-		Node current=root;
-		while(current!=null)
-		{
-			if(current.left.data==target || current.right.data==target) {
-				return current;
-			}
-			else if(current.data>target)
-			{
-				return searchParent(current.left, target);
-			}
-			else {
-				return searchParent(current.right, target);
-			}
-		}
-		return null;
-	}
-}
-
-public class Thurs {
-	static Scanner sc=new Scanner(System.in);
-	
-	public static Node create(int[] ar, int l, int r)
+	public Node(int d)
 	{
-		if(r<=l)
-		{
-			System.out.println("Ended here");
-			return null;
-		}
-		int m=(r-l)/2;
-		System.out.println("m is "+m);
-		Node root=new Node(ar[m]);
-		root.left=create(ar, l, m);
-		root.right=create(ar, m+1, r);
-		return root;
+		data = d;
+		left = null;
+		right = null;
 	}
-	
-	public static void main(String[] args) {
-		int n=sc.nextInt();
-		Tree ob=new Tree();
-		int[] arr=new int[n];
-		for(int i=0; i<n; i++)
+}
+
+public class Lab8_SecA
+{
+	Node root;
+
+	public int showParent(int d)
+	{
+		if(root.data == d)
+			return 0;
+		Node tr = root;
+		Node parent;
+		while(true)
 		{
-			arr[i]=sc.nextInt();		
-		}
-		ob.parent=create(arr, 0, n-1);
-		for(int i=0; i<n; i++)
-		{
-			Node ans=ob.searchParent(ob.parent, arr[i]);
-			System.out.println("Answer : "+ans.data);
+			parent = tr;
+			if(tr.left.data == d || tr.right.data == d)
+				return parent.data;
+			else if(d < tr.data)
+				tr = tr.left;
+			else
+				tr = tr.right;
 		}
 	}
-	
+
+	public void addNode(int d)
+	{
+		Node add = new Node(d) ;
+		if(root == null)
+		{
+			root = add;
+			return ;
+		}
+		else
+		{
+			Node tr = root;
+			Node parent;
+			while(true)
+			{
+				parent = tr;
+				if(d < tr.data)
+				{	tr = tr.left;
+					if(tr == null)
+					{
+						parent.left = add;
+						return ;
+					}
+				}
+				else
+				{
+					tr = tr.right;
+					if(tr == null)
+					{
+						parent.right = add;
+						return ;
+					}
+				}
+			}
+		}
+	}
+
+	public static void makeTree(Lab8_SecA tree , int a[] , int s , int e)
+	{
+		if(s == e)
+			return ;
+		int mid = (int) (s+e)/2;
+		tree.addNode(a[mid]);
+		makeTree(tree , a , s , mid);
+		makeTree(tree , a , mid+1 , e);
+	}
+
+	public static void main(String[] args)
+	{
+		Scanner cin = new Scanner(System.in);
+		int n = cin.nextInt();
+		int a[] = new int[n];
+		for(int i=0 ; i<n ; i++)
+			a[i] = cin.nextInt();
+
+		Lab8_SecA tree = new Lab8_SecA();
+		makeTree(tree , a , 0 , n);
+		for(int i=0 ; i<n ;i++)
+			System.out.print(tree.showParent(a[i]) + " ");
+	}
 }
