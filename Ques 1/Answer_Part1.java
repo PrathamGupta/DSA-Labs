@@ -31,6 +31,6 @@ public class Answer_Part1 {
 				min=sum;
 			}
 		}
-		System.out.println(min);
+		 System.out.println(min);
 	}
 }
